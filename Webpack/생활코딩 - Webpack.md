@@ -79,7 +79,7 @@ webpack.config.js
 
 - 웹팩 홈페이지 configuration 섹션에 들어가 webpack.config.js예제 파일 참조
 - module.exports = {
-    entry: "index.js",
+    entry: "./source/index.js",
     output: {
       path: path.resolve(__dirname, "public"), // public 폴더에
       filename: "index_bundle.js"
@@ -117,6 +117,59 @@ npx webpack --config webpack.config.prod.js 로 개발 모드로 번들링
 
 ```
 웹팩의 핵심,
+
+js번들러 파일과 별개로
+css파일이 별도로 다운로드될때,
+js안에 css파일까지 넣으면 좋겠다
+
+웹팩을 잘 다룬다 = 로더를 얼마나 잘 다루는가?
+```
+```
+- npm install --save-dev(-D) style-loader css-loader
+- webpack.config.js에서
+module: {
+    rules: [..
+
+test: /\.css$/, // 확장자가 .css로 끝나는 파일 처리
+use: ['css-loader']
+
+웹팩 동작 시 확장자가 .css인 파일을 만나면
+웹팩이 알아서 "웹팩 안으로 로드" 시켜주는 특수한 명령
+
+- index.html에서 <link..>지우고
+index.js안에
+import css from './style.css'
+style.css를 source폴더 하위로 옮겨야 한다.
+
+- 웹팩이 index.js를 보다가
+확장자가 css인 파일을 설정 파일에 따라 css-loader가 .css파일을 css변수에 세팅해준다.
+"import css from './style.css'"
+
+console.log(css)를 보면
+css내용이 자바스크립트 형태로 웹팩에 주입되었다. 
+```
+```
+use: ['style-loader', 'css-loader']
+
+css-loader: .css파일을 읽어 웹팩으로 가져오는 놈
+style-loader: 가져온 css코드를 웹페이지 안에 스타일 태그로 주입해주는 로더
+
+서버에서 index_bindle.js만 읽어왔음에도
+css가 웹페이지에 삽입되었다.
+
+개발자 도구의
+elements의
+<head>의 <style>에 삽입되었다.
+```
+
+### 7. output설정
+```
+
+
+```
+
+### 8. 플러그인의 도입
+```
 
 
 ```
