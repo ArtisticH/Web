@@ -152,7 +152,7 @@ css내용이 자바스크립트 형태로 웹팩에 주입되었다.
 use: ['style-loader', 'css-loader']
 
 css-loader: .css파일을 읽어 웹팩으로 가져오는 놈
-style-loader: 가져온 css코드를 웹페이지 안에 스타일 태그로 주입해주는 로더
+style-loader: 가져온 css코드를 웹페이지 안에 스타일 태그<style></style>로 주입해주는 로더
 
 서버에서 index_bindle.js만 읽어왔음에도
 css가 웹페이지에 삽입되었다.
@@ -160,18 +160,100 @@ css가 웹페이지에 삽입되었다.
 개발자 도구의
 elements의
 <head>의 <style>에 삽입되었다.
+
+- 로더: 입력한 assets이 로더를 통과하면
+로더가 자산들을 가공해
+우리가 원하는 output으로 만들어준다.
+
+- test:에 맞는 파일 발견시
+설정한 로더들을 통과시켜라.
+- 뒤쪽에 있는 로더가 먼저 실행된다. 
 ```
 
 ### 7. output설정
 ```
+index.html말고 about.html파일이 있을때,
+about_bundle.js을 만들고 싶다.
+새로운 entry: about.js
 
+entry: {
+    index: "./source/index.js",
+    about: "./source/about.js",
+}
 
+output: {
+    path: path.resolve(__dirname, "public"), // public 폴더에
+    filename: "[name]_bundle.js"
+}
 ```
 
 ### 8. 플러그인의 도입
 ```
+확장 기능
+1. 로더: 최종 결과물을 만들어가기 위해 그 과정에 쓰인다.
+2. 플러그인: 최종 결과물을 변형한다. 
 
+로더는 규정되어 있고,
+플러그인은 보다 자유롭다.
+플러그인마다 사용방법이 다르다.
+```
+```
+- HtmlWebpackPlugin 사용할거임
+html파일을 자동으로 생성하고 싶다?
+html파일을 템플릿으로 사용하고 싶다?
 
+npm insatll -D html-webpack-plugin
+
+- 두개의 Html파일을 source폴더에 옮기고
+html파일 내의 <script "..bundie">삭제
+public폴더 안에 최종적으로 최종적으로 완성된 Html 생성
+
+- 플러그인
+require()로 변수에 할당하고,
+plugins: [new HtmlWebpackPlugin()]
+
+- rm ./public/*.*; npx webpack // 기존의 public에 있던 두 개의 bundle.js파일들 삭제
+- public에 이전에 없던 index.html 파일 생성됌,
+그리고 번들된 자바스크립트 파일이 자동으로 script에 삽입됌
+- 근데 아직 템플릿화 안됌
+```
+```
+- plugins: [new HtmlWebpackPlugin({
+    template: './source/index.html',
+    filename: './index.html', // 최종 파일명
+    chunks: ['index'], // index_bundle.js만 삽입
+})]
+
+- plugins: [
+    new HtmlWebpackPlugin({
+        template: './source/index.html',
+        filename: './index.html', // 최종 파일명
+        chunks: ['index'], // index_bundle.js만 삽입
+    }),
+    new HtmlWebpackPlugin({
+        template: './source/about.html',
+        filename: './about.html', // 최종 파일명
+        chunks: ['about'], // about_bundle.js만 삽입
+    }),
+] // public에 index.html과 about.html 모두 생성
 ```
 
+
+
+### 9. 선물
+```
+npx webpack대신
+npx webpack --watch
+: 파일의 변경을 감지해 자동으로 컴파일시켜준다.
+```
+
+### 10. npm 패키지 사용
+```
+npm패키지를 application으로 가져올때 웹팩을 사용하는 방법
+
+- lodash 라이브러리 설치: npm i lodash
+- index.js안에
+import _ from "lodash";
+웹팩이 node_modules에서 lodash를 찾아 _를 준다.
+```
 
