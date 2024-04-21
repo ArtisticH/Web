@@ -16,7 +16,7 @@ CSS, IMG와 같은 모듈들을 몰아넣을 수 있고,
 다시 분리할 수도 있다. 
 ```
 
-### 웹팩이전의 세계와 모듈의 개념
+### 2. 웹팩이전의 세계와 모듈의 개념
 
 ```
 폴더가 없는 파일 시스템에서 아비규환...
@@ -30,7 +30,7 @@ export와 import가 오래된 웹 브라우저에서 동작하지 않고,
 여전히 여러 파일을 다운받아야 한다. 
 ```
 
-### 웹팩의 도입
+### 3. 웹팩의 도입
 
 ```
 번들러의 대표 주자 웹팩,
@@ -60,6 +60,65 @@ index.js을 ./public/index_bindle.js에 출력
 그리고 파일이 index_bindle.js만 다운로드된다.
 한번만 커넥션이 이루어지지만, 모든 파일이 다 들어가있음.
 import, export가 오래된 브라우저에서도 동작한다. 
+```
+
+### 4. 설정파일 도입
+
+```
+여러 자원들(.js, .css, .png) => 웹팩 => 단순한 형태의 몇몇 파일들
+
+1. 어떻게 여러 자원들(.js, .css, .png)을 웹팩에 input시키는가?
+2. 어떤 방법으로 가공(process)?
+3. 결과(output)
+```
+```
+* 재사용 + 명령을 위한 설정 파일 도입
+
+- 설정 파일 생성
+webpack.config.js
+
+- 웹팩 홈페이지 configuration 섹션에 들어가 webpack.config.js예제 파일 참조
+- module.exports = {
+    entry: "index.js",
+    output: {
+      path: path.resolve(__dirname, "public"), // public 폴더에
+      filename: "index_bundle.js"
+    }
+- npx webpack --config webpack.config.js // 여기 적혀있는 대로 동작
+
+webpack.config.js 으로 이름을 정했다면,
+npx webpack만 해도 알아서 번들링해준다.
+```
+```
+두 가지 방법
+
+1. npx webpack --entry ./source/index.js --output ./public/index_bindle.js
+2. webpack.config.js 생성 후 npx webpack --config webpack.config.js
+```
+
+### 5. 모드의 도입
+
+```
+웹팩의 기본값: 개발 모드와 배포 모드(기본값), 아무것도 세팅하지 않는 모드
+
+번들러 파일은 용량을 줄이기 위해 변수를 알아보기 힘들다.
+
+- mode: "development"로 설정하면,
+이전보단 인간적인 코드로 바뀌었다.
+
+- webpack.config.prod.js 파일을 하나 더 만들어
+..mode: "production"으로 설정,
+npx webpack --config webpack.config.prod.js 로 개발 모드로 번들링
+
+- 아니면 하나의 파일을 만들어 환경 변수를 이용해 모드가 스위칭되게끔
+```
+
+### 6. 로더의 도입
+
+```
+웹팩의 핵심,
+
+
 ```
 
 
