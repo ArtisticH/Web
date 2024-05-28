@@ -1,4 +1,4 @@
-# app
+# Node.js - app.js
 
 📍 **`express.static`의 역할**
 ```node.js
